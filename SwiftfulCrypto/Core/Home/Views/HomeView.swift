@@ -12,6 +12,7 @@ struct HomeView: View {
     @EnvironmentObject private var vm: HomeViewModel
     @State private var showPortfolio: Bool = false // animate right
     @State private var showPortfolioView: Bool = false // new sheet
+
     
     var body: some View {
         ZStack {
@@ -94,6 +95,9 @@ extension HomeView {
             }
         }
         .listStyle(PlainListStyle())
+        .refreshable {
+            await vm.reloadData()
+        }
     }
     
     private var portfolioCoinsList: some View {
@@ -104,6 +108,9 @@ extension HomeView {
             }
         }
         .listStyle(PlainListStyle())
+        .refreshable {
+            await vm.reloadData()
+        }
     }
     
     private var columnTitles: some View {
@@ -115,6 +122,17 @@ extension HomeView {
             }
             Text("price")
                 .frame(width: UIScreen.main.bounds.width / 3.5, alignment: .trailing)
+            
+            Button {
+                Task {
+                    await vm.reloadData()
+                }
+            } label: {
+                Image(systemName: "goforward")
+                    .rotationEffect(Angle(degrees: vm.isLoading ? 360 : 0))
+                    .animation(vm.isLoading ? .linear(duration: 2.0).repeatForever(autoreverses: false) : nil,
+                                   value: vm.isLoading)
+            }
         }
         .font(.caption)
         .foregroundStyle(Color.theme.secondaryText)
