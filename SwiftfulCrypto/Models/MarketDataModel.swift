@@ -180,6 +180,7 @@ struct MarketDataModel: Codable {
         case marketCapChangePercentage24HUsd = "market_cap_change_percentage_24h_usd"
     }
     
+   
     var marketCap: String {
         if let item = totalMarketCap.first(where: { $0.key == "usd" }) {
             return "$" + item.value.formattedWithAbbreviations()
