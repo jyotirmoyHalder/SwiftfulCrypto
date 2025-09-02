@@ -11,34 +11,42 @@ struct SettingsView: View {
     
     @Environment(\.dismiss) var dismiss
     let defaultURL = URL(string: "https://www.google.com")!
-    let youtubeURL = URL(string: "https://youtube.como/c/swiftfulthinking")!
+    let youtubeURL = URL(string: "https://youtube.com/c/swiftfulthinking")!
     let coffeeURL = URL(string: "https://www.buymeacoffee.com/nicksarno")!
     let coingeckoURL = URL(string: "https://www.coingecko.com")!
     let personalURL = URL(string: "https://nicksarno.com")!
     
     var body: some View {
-        NavigationView {
-            List {
-                swiftfulthinkingSection
-                coinGeckoSection
-                developerSection
-                applicationSection
-            }
-            .font(.headline)
-            .tint(.blue)
-            .listStyle(GroupedListStyle())
-            .navigationTitle("Settings")
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark")
-                            .font(.headline)
-                    }
-                }
-            }
-        }
+        
+        NavigationStack {
+                   ZStack {
+                       // Full-screen background
+                       Color.theme.background.ignoresSafeArea()
+
+                       // Content
+                       List {
+                           swiftfulthinkingSection
+                           coinGeckoSection
+                           developerSection
+                           applicationSection
+                       }
+                       .listStyle(.insetGrouped)             // modern equivalent of GroupedListStyle
+                       .scrollContentBackground(.hidden)     // hide system list bg
+                       .listRowBackground(Color.theme.background.opacity(0.5))       // rows transparent; red shows through
+                   }
+                   .navigationTitle("Settings")
+                   .toolbar {
+                       ToolbarItem(placement: .topBarLeading) {
+                           Button { dismiss() } label: {
+                               Image(systemName: "xmark").font(.headline)
+                           }
+                       }
+                   }
+               }
+               // Make the nav bar transparent so the ZStack background is visible
+               .toolbarBackground(.hidden, for: .navigationBar)
+               // Optional: if the title color looks off after hiding background, set a scheme:
+               // .toolbarColorScheme(.dark, for: .navigationBar)
     }
 }
 
